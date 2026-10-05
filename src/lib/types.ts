@@ -5,6 +5,7 @@ export type Talent = {
   roles: string[];
   languages: string[];
   tagline: string;
+  bio?: string;
   availability: "available" | "limited" | "booked";
   showreelUrl?: string;
   photos?: string[];
