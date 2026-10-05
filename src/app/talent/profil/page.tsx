@@ -1,26 +1,38 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Eye } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { AuthGate } from "@/components/auth-gate";
 import { PortfolioManager } from "@/components/portfolio-manager";
 import { PresentationRecorder } from "@/components/presentation-recorder";
+import { TalentCard } from "@/components/talent-card";
 import {
   apiGetMyProfile,
   apiUpdateMyProfile,
   availabilityFromApi,
   availabilityToApi,
+  type PortfolioPhoto,
 } from "@/lib/api-client";
 import {
   defaultProfile,
   profileCompleteness,
   type TalentProfile,
 } from "@/lib/talent-profile";
+import type { Talent } from "@/lib/types";
+
+function splitCsv(value: string) {
+  return value
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
 
 function ProfilForm() {
   const [profile, setProfile] = useState<TalentProfile>(defaultProfile);
+  const [photos, setPhotos] = useState<PortfolioPhoto[]>([]);
   const [saved, setSaved] = useState(false);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,6 +62,22 @@ function ProfilForm() {
   }, []);
 
   const completeness = profileCompleteness(profile);
+
+  const recruiterView: Talent = useMemo(
+    () => ({
+      id: "preview",
+      name: profile.name || "Ton nom",
+      city: profile.city || "Ville",
+      roles: splitCsv(profile.roles),
+      languages: splitCsv(profile.languages),
+      tagline: profile.tagline || "Ton accroche apparaîtra ici",
+      bio: profile.bio || undefined,
+      availability: profile.availability,
+      showreelUrl: profile.showreelUrl || undefined,
+      photos: photos.map((p) => p.url),
+    }),
+    [profile, photos],
+  );
 
   function update<K extends keyof TalentProfile>(key: K, value: TalentProfile[K]) {
     setProfile((prev) => ({ ...prev, [key]: value }));
@@ -90,7 +118,7 @@ function ProfilForm() {
   }
 
   return (
-    <main className="mx-auto max-w-3xl px-6 py-12 md:px-12">
+    <main className="mx-auto max-w-6xl px-6 py-12 md:px-12">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -102,13 +130,13 @@ function ProfilForm() {
         <h1 className="font-display mt-3 text-4xl tracking-tight text-mist md:text-5xl">
           Mon profil talent
         </h1>
-        <p className="mt-4 text-mist-dim">
-          Prépare ton dossier avant de postuler : identité, rôles, vidéo de
-          présentation. Les réalisateurs te voient à partir de ce profil.
+        <p className="mt-4 max-w-2xl text-mist-dim">
+          Édite à gauche — à droite, la carte exacte que voient les réalisateurs
+          dans leur shortlist.
         </p>
       </motion.div>
 
-      <div className="mt-8 rounded-2xl border border-frame bg-ink-elevated/80 p-5">
+      <div className="mt-8 rounded-2xl border border-frame bg-ink-elevated/80 p-5 md:max-w-xl">
         <div className="flex items-center justify-between gap-4 text-sm">
           <span className="text-mist-dim">Complétion</span>
           <span className="font-semibold text-spot">{completeness}%</span>
@@ -126,143 +154,168 @@ function ProfilForm() {
       {!ready ? (
         <p className="mt-10 text-mist-dim">Chargement…</p>
       ) : (
-        <motion.form
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.55 }}
-          onSubmit={handleSubmit}
-          className="mt-10 grid gap-5"
-        >
-          <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
-            Nom complet
-            <input
-              value={profile.name}
-              onChange={(e) => update("name", e.target.value)}
-              required
-              className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
-              placeholder="Salma Bennani"
-            />
-          </label>
-
-          <div className="grid gap-5 md:grid-cols-2">
+        <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)]">
+          <motion.form
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.55 }}
+            onSubmit={handleSubmit}
+            className="grid gap-5"
+          >
             <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
-              Ville
+              Nom complet
               <input
-                value={profile.city}
-                onChange={(e) => update("city", e.target.value)}
+                value={profile.name}
+                onChange={(e) => update("name", e.target.value)}
+                required
                 className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
+                placeholder="Salma Bennani"
               />
             </label>
+
+            <div className="grid gap-5 md:grid-cols-2">
+              <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
+                Ville
+                <input
+                  value={profile.city}
+                  onChange={(e) => update("city", e.target.value)}
+                  className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
+                />
+              </label>
+              <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
+                Disponibilité
+                <select
+                  value={profile.availability}
+                  onChange={(e) =>
+                    update(
+                      "availability",
+                      e.target.value as TalentProfile["availability"],
+                    )
+                  }
+                  className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
+                >
+                  <option value="available">Disponible</option>
+                  <option value="limited">Limité</option>
+                  <option value="booked">Booké</option>
+                </select>
+              </label>
+            </div>
+
             <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
-              Disponibilité
-              <select
-                value={profile.availability}
-                onChange={(e) =>
-                  update(
-                    "availability",
-                    e.target.value as TalentProfile["availability"],
-                  )
-                }
+              Rôles (séparés par virgule)
+              <input
+                value={profile.roles}
+                onChange={(e) => update("roles", e.target.value)}
                 className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
-              >
-                <option value="available">Disponible</option>
-                <option value="limited">Limité</option>
-                <option value="booked">Booké</option>
-              </select>
+                placeholder="Lead, Drama, Comedy"
+              />
             </label>
-          </div>
 
-          <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
-            Rôles (séparés par virgule)
-            <input
-              value={profile.roles}
-              onChange={(e) => update("roles", e.target.value)}
-              className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
-              placeholder="Lead, Drama, Comedy"
-            />
-          </label>
+            <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
+              Langues
+              <input
+                value={profile.languages}
+                onChange={(e) => update("languages", e.target.value)}
+                className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
+                placeholder="AR, FR, EN"
+              />
+            </label>
 
-          <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
-            Langues
-            <input
-              value={profile.languages}
-              onChange={(e) => update("languages", e.target.value)}
-              className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
-              placeholder="AR, FR, EN"
-            />
-          </label>
+            <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
+              Accroche
+              <input
+                value={profile.tagline}
+                onChange={(e) => update("tagline", e.target.value)}
+                className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
+                placeholder="Présence caméra intimiste…"
+              />
+            </label>
 
-          <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
-            Accroche
-            <input
-              value={profile.tagline}
-              onChange={(e) => update("tagline", e.target.value)}
-              className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
-              placeholder="Présence caméra intimiste…"
-            />
-          </label>
+            <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
+              Bio
+              <textarea
+                value={profile.bio}
+                onChange={(e) => update("bio", e.target.value)}
+                rows={4}
+                className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
+                placeholder="Expérience, formations, ce que tu cherches…"
+              />
+            </label>
 
-          <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
-            Bio
-            <textarea
-              value={profile.bio}
-              onChange={(e) => update("bio", e.target.value)}
-              rows={4}
-              className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
-              placeholder="Expérience, formations, ce que tu cherches…"
-            />
-          </label>
-
-          <PresentationRecorder
-            value={
-              profile.showreelUrl.startsWith("/") ||
-              profile.showreelUrl.includes("/presentations/")
-                ? profile.showreelUrl
-                : undefined
-            }
-            onSaved={(url) => void persistShowreel(url)}
-            onCleared={() => void persistShowreel("")}
-          />
-
-          <PortfolioManager />
-
-          <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
-            Lien showreel externe (optionnel)
-            <input
-              type="url"
+            <PresentationRecorder
               value={
-                profile.showreelUrl.startsWith("http") &&
-                !profile.showreelUrl.includes("/presentations/")
+                profile.showreelUrl.startsWith("/") ||
+                profile.showreelUrl.includes("/presentations/")
                   ? profile.showreelUrl
-                  : ""
+                  : undefined
               }
-              onChange={(e) => update("showreelUrl", e.target.value)}
-              className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
-              placeholder="https://vimeo.com/… (si tu n’utilises pas la caméra)"
+              onSaved={(url) => void persistShowreel(url)}
+              onCleared={() => void persistShowreel("")}
             />
-          </label>
 
-          {error && <p className="text-sm text-spot">{error}</p>}
+            <PortfolioManager onPhotosChange={setPhotos} />
 
-          <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
-            <button
-              type="submit"
-              disabled={saving}
-              className="rounded-full bg-spot px-7 py-3 text-sm font-semibold text-white transition hover:bg-[var(--spot-hover)] disabled:opacity-60"
-            >
-              {saving ? "Enregistrement…" : "Enregistrer mon profil"}
-            </button>
-            <Link
-              href="/talent"
-              className="rounded-full border border-frame px-7 py-3 text-center text-sm font-semibold text-mist transition hover:border-spot/50 hover:text-spot"
-            >
-              Voir les castings
-            </Link>
-            {saved && (
-              <span className="text-sm text-spot">Profil enregistré ✓</span>
+            <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
+              Lien showreel externe (optionnel)
+              <input
+                type="url"
+                value={
+                  profile.showreelUrl.startsWith("http") &&
+                  !profile.showreelUrl.includes("/presentations/")
+                    ? profile.showreelUrl
+                    : ""
+                }
+                onChange={(e) => update("showreelUrl", e.target.value)}
+                className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
+                placeholder="https://vimeo.com/… (si tu n’utilises pas la caméra)"
+              />
+            </label>
+
+            {error && <p className="text-sm text-spot">{error}</p>}
+
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center">
+              <button
+                type="submit"
+                disabled={saving}
+                className="rounded-full bg-spot px-7 py-3 text-sm font-semibold text-white transition hover:bg-[var(--spot-hover)] disabled:opacity-60"
+              >
+                {saving ? "Enregistrement…" : "Enregistrer mon profil"}
+              </button>
+              <Link
+                href="/talent"
+                className="rounded-full border border-frame px-7 py-3 text-center text-sm font-semibold text-mist transition hover:border-spot/50 hover:text-spot"
+              >
+                Voir les castings
+              </Link>
+              {saved && (
+                <span className="text-sm text-spot">Profil enregistré ✓</span>
+              )}
+            </div>
+          </motion.form>
+
+          <aside className="lg:sticky lg:top-8">
+            <div className="mb-4 flex items-center gap-2">
+              <Eye className="h-4 w-4 text-gold" />
+              <div>
+                <p className="font-mono text-[11px] tracking-[0.3em] text-gold uppercase">
+                  Vue réalisateur
+                </p>
+                <p className="mt-1 text-xs text-mist-dim">
+                  Aperçu live — comme dans leur dashboard.
+                </p>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-dashed border-mist/20 bg-ink/40 p-3">
+              <TalentCard talent={recruiterView} />
+            </div>
+            {!profile.showreelUrl && photos.length === 0 && (
+              <p className="mt-3 text-xs leading-relaxed text-mist-dim">
+                Ajoute une vidéo ou des photos pour que ta carte soit complète
+                côté recruteur.
+              </p>
             )}
-          </div>
-        </motion.form>
+          </aside>
+        </div>
       )}
     </main>
   );

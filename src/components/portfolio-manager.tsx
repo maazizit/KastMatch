@@ -28,16 +28,29 @@ async function compress(file: File): Promise<Blob> {
   return blob;
 }
 
-export function PortfolioManager() {
+type Props = {
+  onPhotosChange?: (photos: PortfolioPhoto[]) => void;
+};
+
+export function PortfolioManager({ onPhotosChange }: Props) {
   const [photos, setPhotos] = useState<PortfolioPhoto[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  function sync(next: PortfolioPhoto[]) {
+    setPhotos(next);
+    onPhotosChange?.(next);
+  }
+
   useEffect(() => {
     apiGetPortfolio()
-      .then(setPhotos)
+      .then((list) => {
+        setPhotos(list);
+        onPhotosChange?.(list);
+      })
       .catch((e) => setError(e instanceof Error ? e.message : "Chargement impossible"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount only
   }, []);
 
   const remaining = MAX - photos.length;
@@ -51,6 +64,7 @@ export function PortfolioManager() {
       if (files.length > remaining) {
         setError(`Maximum ${MAX} photos : seules ${remaining} ont été ajoutées.`);
       }
+      let next = photos;
       for (const file of picked) {
         if (!file.type.startsWith("image/")) {
           setError("Seules les images sont acceptées.");
@@ -58,7 +72,8 @@ export function PortfolioManager() {
         }
         const blob = await compress(file);
         const photo = await apiUploadPortfolioPhoto(blob);
-        setPhotos((prev) => [...prev, photo]);
+        next = [...next, photo];
+        sync(next);
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload échoué");
@@ -72,7 +87,7 @@ export function PortfolioManager() {
     setError(null);
     try {
       await apiDeletePortfolioPhoto(id);
-      setPhotos((prev) => prev.filter((p) => p.id !== id));
+      sync(photos.filter((p) => p.id !== id));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Suppression échouée");
     }

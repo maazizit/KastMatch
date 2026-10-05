@@ -82,6 +82,7 @@ export function mapTalent(t: ApiTalent): Talent {
     roles: splitCsv(p?.roles || ""),
     languages: splitCsv(p?.languages || ""),
     tagline: p?.tagline || "",
+    bio: p?.bio || undefined,
     availability,
     showreelUrl: p?.showreelUrl || undefined,
     photos: t.portfolioPhotos?.map((ph) => ph.url) ?? [],

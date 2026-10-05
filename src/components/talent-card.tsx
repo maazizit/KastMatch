@@ -50,6 +50,11 @@ export function TalentCard({
         </span>
       </div>
       <p className="mt-4 text-sm leading-relaxed text-mist-dim">{talent.tagline}</p>
+      {talent.bio ? (
+        <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-mist/80">
+          {talent.bio}
+        </p>
+      ) : null}
       {talent.photos && talent.photos.length > 0 ? (
         <div className="mt-4 grid grid-cols-5 gap-1.5">
           {talent.photos.map((src) => (

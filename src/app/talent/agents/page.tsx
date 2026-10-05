@@ -8,7 +8,6 @@ import {
   Clapperboard,
   Languages,
   Mic2,
-  Sparkles,
   UserRound,
 } from "lucide-react";
 import { AgentAvatar } from "@/components/agent-avatar";
@@ -176,11 +175,6 @@ export default function TalentAgentsPage() {
             ))}
           </div>
         </section>
-
-        <p className="flex items-center gap-2 text-sm text-mist-dim">
-          <Sparkles className="h-4 w-4 text-spot" />
-          Même avatar partout : tests visio, coach et pitch — ton agent Kast.
-        </p>
       </main>
       </AuthGate>
     </div>
