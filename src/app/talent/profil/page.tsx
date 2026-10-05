@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { SiteNav } from "@/components/site-nav";
 import { AuthGate } from "@/components/auth-gate";
+import { PortfolioManager } from "@/components/portfolio-manager";
 import { PresentationRecorder } from "@/components/presentation-recorder";
 import {
   apiGetMyProfile,
@@ -222,6 +223,8 @@ function ProfilForm() {
             onSaved={(url) => void persistShowreel(url)}
             onCleared={() => void persistShowreel("")}
           />
+
+          <PortfolioManager />
 
           <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
             Lien showreel externe (optionnel)

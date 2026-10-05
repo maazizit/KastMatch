@@ -36,6 +36,7 @@ model User {
   talentProfile TalentProfile?
   castings     Casting[]      @relation("DirectorCastings")
   applications Application[]  @relation("TalentApplications")
+  portfolioPhotos PortfolioPhoto[]
 }
 
 model TalentProfile {
@@ -86,4 +87,18 @@ model Application {
   @@unique([castingId, talentId])
   @@index([talentId])
   @@index([castingId])
+}
+
+model PortfolioPhoto {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  key         String   @unique
+  url         String
+  contentType String
+  sizeBytes   Int
+  position    Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
 }

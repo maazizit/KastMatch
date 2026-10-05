@@ -104,7 +104,7 @@ export default function TalentAgentsPage() {
 
               <form
                 onSubmit={onAsk}
-                className="mt-2 flex max-w-xl items-center gap-2 rounded-full bg-white p-1.5 pl-5"
+                className="mt-2 flex max-w-xl items-center gap-2 rounded-full bg-ink-elevated p-1.5 pl-5"
               >
                 <label htmlFor="kast-ask" className="sr-only">
                   Demander à Kast
@@ -114,7 +114,7 @@ export default function TalentAgentsPage() {
                   value={ask}
                   onChange={(e) => setAsk(e.target.value)}
                   placeholder="Ex. « Prépare mon casting drama en français »"
-                  className="min-w-0 flex-1 border-0 bg-transparent text-sm text-ink outline-none placeholder:text-mist-dim"
+                  className="min-w-0 flex-1 border-0 bg-transparent text-sm text-mist outline-none placeholder:text-mist-dim"
                 />
                 <button
                   type="submit"
@@ -129,7 +129,7 @@ export default function TalentAgentsPage() {
                   <Link
                     key={chip.label}
                     href={chip.href}
-                    className="rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-white hover:text-ink"
+                    className="rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white transition hover:bg-ink-elevated hover:text-ink"
                   >
                     {chip.label}
                   </Link>
@@ -157,7 +157,7 @@ export default function TalentAgentsPage() {
               >
                 <Link
                   href={agent.href}
-                  className="flex h-full flex-col gap-2.5 rounded-[20px] border border-frame bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-spot/35 hover:shadow-md"
+                  className="flex h-full flex-col gap-2.5 rounded-[20px] border border-frame bg-ink-elevated p-5 shadow-sm transition hover:-translate-y-1 hover:border-spot/35 hover:shadow-md"
                 >
                   <span className="flex size-11 items-center justify-center rounded-xl bg-spot/10 text-spot">
                     <agent.icon className="h-5 w-5" />

@@ -15,7 +15,7 @@ export async function GET(request: Request) {
       );
     }
     const key = new URL(request.url).searchParams.get("key");
-    if (!key || !key.startsWith("presentations/")) {
+    if (!key || (!key.startsWith("presentations/") && !key.startsWith("portfolio/"))) {
       return NextResponse.json({ ok: false, error: "Clé invalide" }, { status: 400 });
     }
 

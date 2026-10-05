@@ -69,7 +69,7 @@ function RegisterForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="mt-8 space-y-4 rounded-2xl border border-frame bg-white p-6 shadow-sm"
+      className="mt-8 space-y-4 rounded-2xl border border-frame bg-ink-elevated p-6 shadow-sm"
       noValidate
     >
       <div className="flex gap-2" role="group" aria-label="Type de compte">

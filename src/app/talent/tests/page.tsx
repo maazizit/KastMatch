@@ -179,7 +179,7 @@ export default function TalentTestsPage() {
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="overflow-hidden rounded-3xl border border-frame bg-white shadow-sm"
+            className="overflow-hidden rounded-3xl border border-frame bg-ink-elevated shadow-sm"
           >
             <div className="grid md:grid-cols-[0.9fr_1.1fr]">
               <div className="border-b border-frame bg-lens/50 p-6 md:border-r md:border-b-0">
@@ -281,7 +281,7 @@ export default function TalentTestsPage() {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-3xl border border-frame bg-white p-4 shadow-sm md:p-6"
+            className="rounded-3xl border border-frame bg-ink-elevated p-4 shadow-sm md:p-6"
           >
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-2">
@@ -357,14 +357,14 @@ export default function TalentTestsPage() {
                     Réécouter
                   </button>
                 </div>
-                <p className="rounded-xl bg-white p-3 text-sm leading-relaxed text-mist shadow-sm">
+                <p className="rounded-xl bg-ink-elevated p-3 text-sm leading-relaxed text-mist shadow-sm">
                   {generated.prompt}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {generated.tips.map((tip) => (
                     <span
                       key={tip}
-                      className="rounded-full bg-white px-2.5 py-1 text-[11px] text-mist-dim"
+                      className="rounded-full bg-ink-elevated px-2.5 py-1 text-[11px] text-mist-dim"
                     >
                       {tip}
                     </span>
@@ -379,7 +379,7 @@ export default function TalentTestsPage() {
                   }}
                   rows={5}
                   placeholder="Ta réponse (comme à l’oral)…"
-                  className="mt-4 flex-1 rounded-xl border border-frame bg-white px-3 py-2.5 text-sm outline-none focus:border-spot/60"
+                  className="mt-4 flex-1 rounded-xl border border-frame bg-ink-elevated px-3 py-2.5 text-sm outline-none focus:border-spot/60"
                 />
                 <button
                   type="button"
@@ -405,10 +405,10 @@ export default function TalentTestsPage() {
             animate={{ opacity: 1, y: 0 }}
             className="grid gap-6 md:grid-cols-[0.7fr_1.3fr]"
           >
-            <div className="rounded-3xl border border-frame bg-white p-5 shadow-sm">
+            <div className="rounded-3xl border border-frame bg-ink-elevated p-5 shadow-sm">
               <InterviewerAvatar name="Kast" state="idle" layout="card" />
             </div>
-            <div className="rounded-3xl border border-frame bg-white p-6 shadow-sm">
+            <div className="rounded-3xl border border-frame bg-ink-elevated p-6 shadow-sm">
               <p className="font-display text-sm tracking-[0.3em] text-spot uppercase">
                 Résultat
               </p>

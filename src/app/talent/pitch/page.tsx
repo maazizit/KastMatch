@@ -62,7 +62,7 @@ function PitchClient() {
       <motion.aside
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-3xl border border-frame bg-white p-6 shadow-sm"
+        className="rounded-3xl border border-frame bg-ink-elevated p-6 shadow-sm"
       >
         <div className="flex items-center gap-4">
           <AgentAvatar size={88} rec />
@@ -110,7 +110,7 @@ function PitchClient() {
       <motion.section
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex min-h-[70vh] flex-col rounded-3xl border border-frame bg-white shadow-sm"
+        className="flex min-h-[70vh] flex-col rounded-3xl border border-frame bg-ink-elevated shadow-sm"
       >
         <div className="flex-1 space-y-3 overflow-y-auto p-5">
           {messages.map((m, i) => (

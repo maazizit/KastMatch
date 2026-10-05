@@ -36,7 +36,7 @@ export function AgentAvatar({
       style={{ width: size, height: size }}
     >
       <div
-        className="relative overflow-hidden rounded-full border-4 border-white bg-lens shadow-lg"
+        className="relative overflow-hidden rounded-full border-4 border-ink-elevated bg-lens shadow-lg"
         style={{ width: size, height: size }}
       >
         {failed ? (
@@ -64,7 +64,7 @@ export function AgentAvatar({
       </div>
       {rec && (
         <span
-          className="absolute right-1 bottom-1 flex size-4 items-center justify-center rounded-full border-[3px] border-white bg-spot shadow-[0_0_0_1px_rgba(0,0,0,.15)]"
+          className="absolute right-1 bottom-1 flex size-4 items-center justify-center rounded-full border-[3px] border-ink-elevated bg-spot shadow-[0_0_0_1px_rgba(0,0,0,.15)]"
           aria-label="REC"
           title="REC"
         >

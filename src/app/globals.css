@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  /* Studio daylight — light base, cinema red accent */
-  --ink: #12151c;
-  --ink-elevated: #ffffff;
+  /* Nuit de projection — noir profond, ivoire, rouge cinéma, or pâle */
+  --ink: #050506;
+  --ink-elevated: #131316;
   --spot: #e11d48;
-  --spot-hover: #be123c;
-  --spot-soft: #e11d4826;
-  --flare: #0f766e;
-  --mist: #12151c;
-  --mist-dim: #5b6572;
-  --lens: #f4f6f8;
-  --frame: #d7dde6;
-  --background: #eef1f5;
+  --spot-hover: #f43f5e;
+  --spot-soft: #e11d4840;
+  --flare: #4fd1b8;
+  --gold: #e3c27d;
+  --mist: #f3ebdd;
+  --mist-dim: #9a968d;
+  --lens: #0f0f12;
+  --frame: #26262b;
+  --background: #0a0a0c;
   --foreground: var(--mist);
 }
 
@@ -29,6 +30,8 @@
   --color-frame: var(--frame);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
+  --color-gold: var(--gold);
 }
 
 * {
@@ -59,9 +62,141 @@ body {
 
 .cinema-stage {
   background:
-    radial-gradient(ellipse 70% 50% at 85% 0%, #e11d4818, transparent 55%),
-    radial-gradient(ellipse 55% 40% at 0% 100%, #0f766e14, transparent 50%),
-    linear-gradient(180deg, #f7f8fb 0%, #eef1f5 55%, #e8ecf2 100%);
+    radial-gradient(ellipse 70% 50% at 85% 0%, #e11d4826, transparent 55%),
+    radial-gradient(ellipse 55% 40% at 0% 100%, #e3c27d14, transparent 50%),
+    linear-gradient(180deg, #0d0d10 0%, #0a0a0c 55%, #060607 100%);
+}
+
+/* Contrôles de formulaire sombres, partout */
+input,
+select,
+textarea {
+  background-color: var(--lens);
+  color: var(--mist);
+  border-color: var(--frame);
+  color-scheme: dark;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--spot);
+  box-shadow: 0 0 0 3px var(--spot-soft);
+}
+input::placeholder,
+textarea::placeholder {
+  color: #6b6860;
+}
+
+.font-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px var(--mist);
+  color: transparent;
+}
+
+/* Vignette fixe façon objectif */
+.vignette {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: radial-gradient(ellipse at center, transparent 55%, #000000a0 120%);
+}
+
+/* Faisceau de projecteur */
+.beam {
+  background: conic-gradient(
+    from 180deg at 50% 0%,
+    transparent 0deg,
+    #f3ebdd00 160deg,
+    #f3ebdd22 176deg,
+    #f3ebdd33 180deg,
+    #f3ebdd22 184deg,
+    #f3ebdd00 200deg,
+    transparent 360deg
+  );
+  filter: blur(18px);
+  transform-origin: 50% 0;
+  animation: beam-sway 9s ease-in-out infinite;
+}
+@keyframes beam-sway {
+  0%, 100% { transform: rotate(-4deg); opacity: 0.7; }
+  50% { transform: rotate(4deg); opacity: 1; }
+}
+
+/* Poussière dans le faisceau */
+.dust {
+  position: absolute;
+  border-radius: 9999px;
+  background: #f3ebdd;
+  opacity: 0;
+  animation: dust-float linear infinite;
+}
+@keyframes dust-float {
+  0% { transform: translate(0, 0); opacity: 0; }
+  15% { opacity: 0.55; }
+  85% { opacity: 0.25; }
+  100% { transform: translate(var(--dx, 20px), var(--dy, -120px)); opacity: 0; }
+}
+
+/* Bandeau défilant */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Ligne de scan */
+@keyframes scan {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+.scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--spot), transparent);
+  box-shadow: 0 0 18px 4px var(--spot-soft);
+  animation: scan 3.6s ease-in-out infinite;
+}
+
+/* Titre à dégradé ivoire → rouge */
+.text-gradient-spot {
+  background: linear-gradient(100deg, #ff6b88 0%, var(--spot) 50%, #9f1239 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Curseur viseur */
+.cursor-ring {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 36px;
+  height: 36px;
+  margin: -18px 0 0 -18px;
+  border: 1px solid var(--mist);
+  border-radius: 9999px;
+  mix-blend-mode: difference;
+  transition: width 0.25s, height 0.25s, margin 0.25s, background 0.25s;
+}
+.cursor-ring[data-active="true"] {
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+  background: #ffffff22;
 }
 
 .film-grain {
@@ -69,8 +204,8 @@ body {
   position: fixed;
   inset: 0;
   z-index: 50;
-  opacity: 0.035;
-  mix-blend-mode: multiply;
+  opacity: 0.07;
+  mix-blend-mode: screen;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain-shift 0.9s steps(2) infinite;
 }
@@ -164,8 +299,21 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .film-grain,
   .spotlight-orb,
-  .reel-strip {
+  .reel-strip,
+  .beam,
+  .dust,
+  .marquee-track,
+  .scan-line {
     animation: none;
+  }
+  .cursor-ring {
+    display: none;
   }
 }
 
+
+@media (hover: none) {
+  .cursor-ring {
+    display: none;
+  }
+}

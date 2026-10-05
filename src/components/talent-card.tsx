@@ -28,7 +28,7 @@ export function TalentCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, delay: index * 0.06 }}
       whileHover={{ y: -3 }}
-      className="rounded-2xl border border-frame bg-white p-6 shadow-sm"
+      className="rounded-2xl border border-frame bg-ink-elevated p-6 shadow-sm"
     >
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -50,6 +50,20 @@ export function TalentCard({
         </span>
       </div>
       <p className="mt-4 text-sm leading-relaxed text-mist-dim">{talent.tagline}</p>
+      {talent.photos && talent.photos.length > 0 ? (
+        <div className="mt-4 grid grid-cols-5 gap-1.5">
+          {talent.photos.map((src) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={src}
+              src={src}
+              alt={`Portfolio de ${talent.name}`}
+              loading="lazy"
+              className="aspect-[3/4] w-full rounded-md border border-frame object-cover"
+            />
+          ))}
+        </div>
+      ) : null}
       {talent.showreelUrl ? (
         <div className="mt-4 overflow-hidden rounded-xl border border-frame bg-ink">
           <video

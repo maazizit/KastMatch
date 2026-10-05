@@ -124,7 +124,7 @@ function DirectorWorkspace() {
                   return (
                     <li
                       key={casting.id}
-                      className="flex flex-col gap-1 rounded-xl border border-frame bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+                      className="flex flex-col gap-1 rounded-xl border border-frame bg-ink-elevated px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div>
                         <p className="font-display text-lg text-mist">
@@ -164,7 +164,7 @@ function DirectorWorkspace() {
                 {applications.map((app) => (
                   <li
                     key={app.id}
-                    className="rounded-xl border border-frame bg-white px-5 py-4 shadow-sm"
+                    className="rounded-xl border border-frame bg-ink-elevated px-5 py-4 shadow-sm"
                   >
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                       <div>

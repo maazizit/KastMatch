@@ -53,7 +53,7 @@ function CandidateCard({
       layout
       whileHover={{ y: -2 }}
       className={cn(
-        "flex w-full items-center gap-4 rounded-2xl border bg-white p-4 text-left shadow-sm transition",
+        "flex w-full items-center gap-4 rounded-2xl border bg-ink-elevated p-4 text-left shadow-sm transition",
         selected
           ? "border-spot ring-2 ring-spot/20"
           : "border-frame hover:border-spot/35",
@@ -188,7 +188,7 @@ export function CastingDashboard() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -8 }}
               transition={{ duration: 0.35 }}
-              className="flex flex-col rounded-2xl border border-frame bg-white p-6 shadow-sm lg:col-span-2"
+              className="flex flex-col rounded-2xl border border-frame bg-ink-elevated p-6 shadow-sm lg:col-span-2"
             >
               <div className="flex items-start gap-4">
                 <div className="relative h-20 w-20 overflow-hidden rounded-2xl bg-lens">

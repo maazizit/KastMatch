@@ -48,7 +48,7 @@ export function SiteNav() {
   }
 
   return (
-    <header className="relative z-20 flex items-center justify-between gap-3 border-b border-frame bg-white/85 px-6 py-5 backdrop-blur-md md:px-12">
+    <header className="relative z-20 flex items-center justify-between gap-3 border-b border-white/10 bg-ink/70 px-6 py-5 backdrop-blur-xl md:px-12">
       <div className="flex items-center gap-3">
         <Link
           href="/"
@@ -97,7 +97,7 @@ export function SiteNav() {
             </Link>
             <Link
               href="/register"
-              className="rounded-full bg-spot px-3 py-1.5 text-xs tracking-[0.2em] text-white uppercase sm:px-4"
+              className="rounded-full bg-spot px-3 py-1.5 text-xs tracking-[0.2em] text-white uppercase transition hover:bg-[var(--spot-hover)] sm:px-4"
             >
               Inscription
             </Link>

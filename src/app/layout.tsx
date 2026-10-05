@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
-import { DM_Sans, Syne } from "next/font/google";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
+import { CursorRing } from "@/components/cursor-ring";
 import { FilmGrain } from "@/components/film-grain";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import "./globals.css";
 
-const display = Syne({
+const display = Fraunces({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  axes: ["opsz"],
 });
 
-const body = DM_Sans({
+const body = Inter({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+});
+
+const mono = JetBrains_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
@@ -69,9 +74,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${display.variable} ${body.variable} h-full`}>
+    <html lang="fr" className={`${display.variable} ${body.variable} ${mono.variable} h-full`}>
       <body className="min-h-full antialiased">
         <FilmGrain />
+        <div className="vignette" aria-hidden />
+        <CursorRing />
         {children}
       </body>
     </html>

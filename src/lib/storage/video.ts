@@ -14,7 +14,7 @@ import {
 } from "./config";
 import { VIDEO_LIMITS } from "./limits";
 
-function createR2Client() {
+export function createR2Client() {
   return new S3Client({
     region: "auto",
     endpoint: r2Endpoint(),
@@ -120,7 +120,7 @@ export async function getR2Object(key: string) {
   if (!isR2Configured()) {
     throw new Error("R2 non configuré");
   }
-  if (!key.startsWith("presentations/")) {
+  if (!key.startsWith("presentations/") && !key.startsWith("portfolio/")) {
     throw new Error("Clé invalide");
   }
   const client = createR2Client();

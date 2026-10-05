@@ -67,7 +67,7 @@ function LoginForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="mt-8 space-y-4 rounded-2xl border border-frame bg-white p-6 shadow-sm"
+      className="mt-8 space-y-4 rounded-2xl border border-frame bg-ink-elevated p-6 shadow-sm"
       noValidate
     >
       <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">

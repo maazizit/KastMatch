@@ -45,7 +45,7 @@ export function CastingForm({ onCreate }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-frame bg-white p-6 shadow-sm">
+    <div className="rounded-2xl border border-frame bg-ink-elevated p-6 shadow-sm">
       <div className="flex items-center justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl text-mist">Nouveau casting</h2>

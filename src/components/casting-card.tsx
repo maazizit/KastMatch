@@ -24,7 +24,7 @@ export function CastingCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, delay: index * 0.06 }}
       whileHover={{ y: -3 }}
-      className="flex flex-col rounded-2xl border border-frame bg-white p-6 shadow-sm"
+      className="flex flex-col rounded-2xl border border-frame bg-ink-elevated p-6 shadow-sm"
     >
       <div className="flex items-start justify-between gap-3">
         <div>

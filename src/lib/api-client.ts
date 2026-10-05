@@ -29,7 +29,10 @@ export type ApiTalent = {
     photoUrl: string;
     availability: "AVAILABLE" | "LIMITED" | "BOOKED";
   } | null;
+  portfolioPhotos?: PortfolioPhoto[];
 };
+
+export type PortfolioPhoto = { id: string; url: string };
 
 export type ApiProfile = {
   city: string;
@@ -81,6 +84,7 @@ export function mapTalent(t: ApiTalent): Talent {
     tagline: p?.tagline || "",
     availability,
     showreelUrl: p?.showreelUrl || undefined,
+    photos: t.portfolioPhotos?.map((ph) => ph.url) ?? [],
   };
 }
 
@@ -202,5 +206,24 @@ export async function apiUpdateMyProfile(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
+  return parseJson(res);
+}
+
+export async function apiGetPortfolio(): Promise<PortfolioPhoto[]> {
+  const res = await fetch("/api/portfolio", { cache: "no-store" });
+  const data = await parseJson(res);
+  return data.photos as PortfolioPhoto[];
+}
+
+export async function apiUploadPortfolioPhoto(file: Blob): Promise<PortfolioPhoto> {
+  const form = new FormData();
+  form.append("photo", file, "photo");
+  const res = await fetch("/api/portfolio", { method: "POST", body: form });
+  const data = await parseJson(res);
+  return data.photo as PortfolioPhoto;
+}
+
+export async function apiDeletePortfolioPhoto(id: string) {
+  const res = await fetch(`/api/portfolio/${id}`, { method: "DELETE" });
   return parseJson(res);
 }
