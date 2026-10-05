@@ -161,6 +161,7 @@ export async function apiGetApplications() {
       name: string;
       email: string;
       talentProfile: ApiProfile | null;
+      portfolioPhotos?: PortfolioPhoto[];
     };
   }>;
 }

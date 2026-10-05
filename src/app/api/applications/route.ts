@@ -40,6 +40,11 @@ export async function GET() {
             name: true,
             email: true,
             talentProfile: true,
+            portfolioPhotos: {
+              orderBy: { position: "asc" },
+              take: 5,
+              select: { id: true, url: true },
+            },
           },
         },
       },

@@ -30,6 +30,7 @@ export function SiteNav() {
     user?.role === "DIRECTOR"
       ? [
           ...publicLinks,
+          { href: "/director/talents", label: "Talents" },
           { href: "/director", label: "Castings" },
           { href: "/director/dashboard", label: "Dashboard IA" },
         ]
