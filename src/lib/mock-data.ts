@@ -1,0 +1,76 @@
+import type { Casting, Talent } from "./types";
+
+export const talents: Talent[] = [
+  {
+    id: "t1",
+    name: "Salma Bennani",
+    city: "Casablanca",
+    roles: ["Lead", "Drama"],
+    languages: ["AR", "FR"],
+    tagline: "Présence caméra intimiste, shorts & long métrage.",
+    availability: "available",
+  },
+  {
+    id: "t2",
+    name: "Youssef El Amrani",
+    city: "Rabat",
+    roles: ["Supporting", "Action"],
+    languages: ["AR", "FR", "EN"],
+    tagline: "Physique dynamique, pub & fiction.",
+    availability: "limited",
+  },
+  {
+    id: "t3",
+    name: "Imane Chraibi",
+    city: "Marrakech",
+    roles: ["Lead", "Comedy"],
+    languages: ["AR", "FR"],
+    tagline: "Timing comique, casting digital & cinéma.",
+    availability: "available",
+  },
+  {
+    id: "t4",
+    name: "Omar Tazi",
+    city: "Tanger",
+    roles: ["Extra", "Voice"],
+    languages: ["AR", "ES"],
+    tagline: "Voix off bilingue, figuration premium.",
+    availability: "booked",
+  },
+];
+
+export const castings: Casting[] = [
+  {
+    id: "c1",
+    title: "Nuit Blanche — court métrage",
+    production: "Atlas Frame",
+    city: "Casablanca",
+    role: "Lead féminin, 25–35",
+    shootDates: "12–18 nov",
+    paid: true,
+    director: "Hanae Mourad",
+    summary: "Drame nocturne. Besoin d’une présence contenue, peu de dialogues.",
+  },
+  {
+    id: "c2",
+    title: "Spot thé — chaleur",
+    production: "Studio Lumen",
+    city: "Rabat",
+    role: "Couple 30–40",
+    shootDates: "2 jours · oct",
+    paid: true,
+    director: "Karim Fadili",
+    summary: "Pub lifestyle. Ton chaleureux, improvisation légère bienvenue.",
+  },
+  {
+    id: "c3",
+    title: "Figuration marché",
+    production: "Nord Prod",
+    city: "Tanger",
+    role: "Crowd / extras",
+    shootDates: "weekend",
+    paid: false,
+    director: "Sara Lahlou",
+    summary: "Scène de marché pour long métrage indé. Ambiance authentique.",
+  },
+];

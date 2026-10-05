@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TALENT
+  DIRECTOR
+}
+
+enum Availability {
+  AVAILABLE
+  LIMITED
+  BOOKED
+}
+
+enum ApplicationStatus {
+  PENDING
+  SHORTLISTED
+  REJECTED
+  BOOKED
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  passwordHash String
+  name         String
+  role         Role
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  talentProfile TalentProfile?
+  castings     Casting[]      @relation("DirectorCastings")
+  applications Application[]  @relation("TalentApplications")
+}
+
+model TalentProfile {
+  id           String       @id @default(cuid())
+  userId       String       @unique
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  city         String       @default("")
+  roles        String       @default("")
+  languages    String       @default("")
+  tagline      String       @default("")
+  bio          String       @default("")
+  showreelUrl           String       @default("")
+  presentationVideoKey  String       @default("")
+  photoUrl              String       @default("")
+  availability          Availability @default(AVAILABLE)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Casting {
+  id           String        @id @default(cuid())
+  directorId   String
+  director     User          @relation("DirectorCastings", fields: [directorId], references: [id], onDelete: Cascade)
+  title        String
+  production   String        @default("")
+  city         String        @default("")
+  role         String
+  shootDates   String        @default("")
+  paid         Boolean       @default(true)
+  summary      String
+  isOpen       Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  applications Application[]
+}
+
+model Application {
+  id        String            @id @default(cuid())
+  castingId String
+  casting   Casting           @relation(fields: [castingId], references: [id], onDelete: Cascade)
+  talentId  String
+  talent    User              @relation("TalentApplications", fields: [talentId], references: [id], onDelete: Cascade)
+  status    ApplicationStatus @default(PENDING)
+  coverNote String            @default("")
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@unique([castingId, talentId])
+  @@index([talentId])
+  @@index([castingId])
+}
