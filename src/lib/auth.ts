@@ -54,7 +54,15 @@ export async function createSession(user: SessionUser) {
 
 export async function destroySession() {
   const jar = await cookies();
-  jar.delete(COOKIE);
+  // Expire explicitement avec les mêmes attributs que createSession
+  // (sinon le cookie peut survivre en prod / derrière Vercel).
+  jar.set(COOKIE, "", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 0,
+  });
 }
 
 export async function getSession(): Promise<SessionUser | null> {

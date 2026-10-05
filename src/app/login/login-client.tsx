@@ -43,10 +43,11 @@ function LoginForm() {
     try {
       const user = await loginRequest(email, password);
       const next = searchParams.get("next");
+      // replace : évite que « Précédent » ramène au formulaire login
       if (next && next.startsWith("/") && !next.startsWith("//")) {
-        router.push(next);
+        router.replace(next);
       } else {
-        router.push(user.role === "DIRECTOR" ? "/director" : "/talent/agents");
+        router.replace(user.role === "DIRECTOR" ? "/director" : "/talent/agents");
       }
       router.refresh();
     } catch (err) {

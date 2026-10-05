@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Clapperboard, Sparkles } from "lucide-react";
+import { AccountNav } from "./account-nav";
 import { AiBadge } from "./ai-badge";
 import { Dust } from "./dust";
 import { FilmReel } from "./film-reel";
@@ -58,23 +59,17 @@ export function Hero() {
           </p>
           <AiBadge className="hidden sm:inline-flex" />
         </motion.div>
-        <motion.nav
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.6 }}
-          className="flex items-center gap-2 font-mono text-[11px] tracking-[0.2em] uppercase sm:gap-3"
-          aria-label="Compte"
         >
-          <Link href="/login" className="rounded-full px-3 py-2 text-mist-dim transition hover:text-mist">
-            Connexion
-          </Link>
-          <Link
-            href="/register"
-            className="rounded-full border border-mist/30 px-4 py-2 text-mist transition hover:border-spot hover:bg-spot"
-          >
-            Inscription
-          </Link>
-        </motion.nav>
+          <AccountNav
+            className="font-mono text-[11px] tracking-[0.2em] uppercase"
+            linkClassName="rounded-full px-3 py-2 text-mist-dim transition hover:text-mist"
+            ctaClassName="rounded-full border border-mist/30 px-4 py-2 text-mist transition hover:border-spot hover:bg-spot"
+          />
+        </motion.div>
       </header>
 
       <div className="relative z-10 flex flex-1 flex-col justify-center px-8 pb-24 md:max-w-[62%] md:px-14">

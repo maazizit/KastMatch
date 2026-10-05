@@ -7,9 +7,7 @@ import { cn } from "@/lib/cn";
 import { AiBadge } from "./ai-badge";
 import { fetchMe, logoutRequest, type AuthUser } from "@/lib/auth-client";
 
-const publicLinks = [
-  { href: "/", label: "Accueil" },
-] as const;
+const publicLinks = [{ href: "/", label: "Accueil" }] as const;
 
 export function SiteNav() {
   const pathname = usePathname();
@@ -19,6 +17,14 @@ export function SiteNav() {
   useEffect(() => {
     void fetchMe().then(setUser);
   }, [pathname]);
+
+  useEffect(() => {
+    function onPageShow(e: PageTransitionEvent) {
+      if (e.persisted) void fetchMe().then(setUser);
+    }
+    window.addEventListener("pageshow", onPageShow);
+    return () => window.removeEventListener("pageshow", onPageShow);
+  }, []);
 
   const links =
     user?.role === "DIRECTOR"
@@ -43,7 +49,7 @@ export function SiteNav() {
   async function onLogout() {
     await logoutRequest();
     setUser(null);
-    router.push("/");
+    router.replace("/");
     router.refresh();
   }
 
@@ -85,7 +91,7 @@ export function SiteNav() {
             onClick={() => void onLogout()}
             className="rounded-full px-3 py-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase transition hover:text-spot sm:px-4"
           >
-            Sortir
+            Déconnexion
           </button>
         ) : (
           <>

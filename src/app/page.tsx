@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Hero } from "@/components/hero";
 import { FinalCta } from "@/components/final-cta";
+import { HomeFooter } from "@/components/home-footer";
 import { Marquee } from "@/components/marquee";
 import { MatchDemo } from "@/components/match-demo";
 import { RolesSection } from "@/components/roles-section";
@@ -73,28 +73,7 @@ export default function Home() {
       <MatchDemo />
       <TalentReel />
       <FinalCta />
-      <footer className="border-t border-frame bg-ink-elevated px-6 py-10 md:px-12">
-        <div className="mx-auto flex max-w-5xl flex-col gap-4 text-xs tracking-[0.25em] text-mist-dim uppercase sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-display text-mist normal-case tracking-normal">
-            Kast<span className="text-spot">Match</span>
-          </p>
-          <nav className="flex flex-wrap gap-4 normal-case tracking-normal">
-            <Link href="/login" className="hover:text-spot">
-              Connexion
-            </Link>
-            <Link href="/register" className="hover:text-spot">
-              Inscription
-            </Link>
-            <Link href="/register?role=TALENT" className="hover:text-spot">
-              Talent
-            </Link>
-            <Link href="/register?role=DIRECTOR" className="hover:text-spot">
-              Réalisateur
-            </Link>
-          </nav>
-          <p>Casting · Cinema · Private beta</p>
-        </div>
-      </footer>
+      <HomeFooter />
     </main>
   );
 }
