@@ -342,3 +342,67 @@ export async function apiGetUnreadCount(): Promise<number> {
   const data = await parseJson(res);
   return data.count as number;
 }
+
+export type CharacterSheet = {
+  title: string;
+  summary: string;
+  gender: string;
+  ageMin: number | null;
+  ageMax: number | null;
+  heightMin: number | null;
+  heightMax: number | null;
+  builds: string[];
+  hair: string[];
+  eyes: string[];
+  languages: string[];
+  roles: string[];
+  traits: string[];
+  voice: string;
+};
+
+export type AiMatchRow = {
+  id: string;
+  name: string;
+  city: string;
+  tagline: string;
+  photo: string | null;
+  structuredScore: number;
+  score: number;
+  reason: string;
+  strengths: string[];
+  risks: string[];
+};
+
+export type AiCompareResult = {
+  talents: { id: string; name: string; fit: number; strengths: string[]; risks: string[] }[];
+  recommendation: string;
+  differentiators: string[];
+};
+
+async function postJson(url: string, body: unknown) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  return parseJson(res);
+}
+
+export async function apiAiBrief(brief: string): Promise<CharacterSheet> {
+  const data = await postJson("/api/ai/director/brief", { brief });
+  return data.sheet as CharacterSheet;
+}
+
+export async function apiAiMatch(brief: string, sheet: CharacterSheet) {
+  const data = await postJson("/api/ai/director/match", { brief, sheet });
+  return data as { results: AiMatchRow[]; aiUsed: boolean; totalTalents: number };
+}
+
+export async function apiAiCompare(
+  brief: string,
+  sheet: CharacterSheet,
+  talentIds: string[],
+): Promise<AiCompareResult> {
+  const data = await postJson("/api/ai/director/compare", { brief, sheet, talentIds });
+  return data as unknown as AiCompareResult;
+}
