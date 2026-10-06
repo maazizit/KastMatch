@@ -15,7 +15,53 @@ const updateSchema = z.object({
   showreelUrl: z.string().optional(),
   photoUrl: z.string().optional(),
   availability: z.enum(["AVAILABLE", "LIMITED", "BOOKED"]).optional(),
+  gender: z.string().max(20).optional(),
+  ageMin: z.number().int().min(5).max(99).nullable().optional(),
+  ageMax: z.number().int().min(5).max(99).nullable().optional(),
+  heightCm: z.number().int().min(100).max(230).nullable().optional(),
+  build: z.string().max(20).optional(),
+  hairColor: z.string().max(20).optional(),
+  eyeColor: z.string().max(20).optional(),
+  appearance: z.string().max(120).optional(),
+  distinctFeatures: z.string().max(300).optional(),
+  physicalDescription: z.string().max(1000).optional(),
 });
+
+const PHYSICAL_KEYS = [
+  "gender",
+  "ageMin",
+  "ageMax",
+  "heightCm",
+  "build",
+  "hairColor",
+  "eyeColor",
+  "appearance",
+  "distinctFeatures",
+  "physicalDescription",
+] as const;
+
+function physicalCreate(body: z.infer<typeof updateSchema>) {
+  return {
+    gender: body.gender ?? "",
+    ageMin: body.ageMin ?? null,
+    ageMax: body.ageMax ?? null,
+    heightCm: body.heightCm ?? null,
+    build: body.build ?? "",
+    hairColor: body.hairColor ?? "",
+    eyeColor: body.eyeColor ?? "",
+    appearance: body.appearance ?? "",
+    distinctFeatures: body.distinctFeatures ?? "",
+    physicalDescription: body.physicalDescription ?? "",
+  };
+}
+
+function physicalUpdate(body: z.infer<typeof updateSchema>) {
+  const out: Record<string, unknown> = {};
+  for (const key of PHYSICAL_KEYS) {
+    if (body[key] !== undefined) out[key] = body[key];
+  }
+  return out;
+}
 
 export async function GET() {
   try {
@@ -56,6 +102,7 @@ export async function PUT(request: Request) {
               showreelUrl: body.showreelUrl ?? "",
               photoUrl: body.photoUrl ?? "",
               availability: body.availability ?? "AVAILABLE",
+              ...physicalCreate(body),
             },
             update: {
               ...(body.city !== undefined ? { city: body.city } : {}),
@@ -71,6 +118,7 @@ export async function PUT(request: Request) {
               ...(body.availability !== undefined
                 ? { availability: body.availability }
                 : {}),
+              ...physicalUpdate(body),
             },
           },
         },

@@ -11,6 +11,13 @@ import {
 } from "lucide-react";
 import type { Talent } from "@/lib/types";
 import {
+  buildLabel,
+  eyeLabel,
+  genderLabel,
+  hairLabel,
+  playingAgeLabel,
+} from "@/lib/physical";
+import {
   defaultContactMessage,
   mailtoHref,
   whatsappHref,
@@ -118,6 +125,8 @@ export function TalentProfilePanel({
             </p>
           </div>
         )}
+
+        <PhysicalBlock talent={talent} />
 
         <div className="flex flex-wrap gap-2">
           {talent.roles.map((role) => (
@@ -319,5 +328,44 @@ export function TalentProfilePanel({
         <footer className="border-t border-frame px-5 py-4">{footer}</footer>
       )}
     </article>
+  );
+}
+
+function PhysicalBlock({ talent }: { talent: Talent }) {
+  const ph = talent.physical;
+  if (!ph) return null;
+  const rows: [string, string][] = [
+    ["Genre", ph.gender ? genderLabel(ph.gender) : ""],
+    ["Âge de jeu", playingAgeLabel(ph.ageMin, ph.ageMax)],
+    ["Taille", ph.heightCm ? `${ph.heightCm} cm` : ""],
+    ["Corpulence", ph.build ? buildLabel(ph.build) : ""],
+    ["Cheveux", ph.hairColor ? hairLabel(ph.hairColor) : ""],
+    ["Yeux", ph.eyeColor ? eyeLabel(ph.eyeColor) : ""],
+    ["Apparence", ph.appearance],
+    ["Signes distinctifs", ph.distinctFeatures],
+  ];
+  const shown = rows.filter(([, v]) => v);
+  if (shown.length === 0 && !ph.physicalDescription) return null;
+  return (
+    <div>
+      <p className="font-mono text-[10px] tracking-[0.25em] text-mist-dim uppercase">
+        Physique
+      </p>
+      {shown.length > 0 && (
+        <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+          {shown.map(([k, v]) => (
+            <div key={k}>
+              <dt className="text-[11px] text-mist-dim">{k}</dt>
+              <dd className="text-mist">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      {ph.physicalDescription && (
+        <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-mist-dim">
+          {ph.physicalDescription}
+        </p>
+      )}
+    </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { Talent } from "@/lib/types";
+import { buildLabel, playingAgeLabel } from "@/lib/physical";
 
 const availabilityLabel = {
   available: "Dispo",
@@ -87,6 +88,20 @@ export function TalentCard({
         <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-mist-dim">
           {talent.tagline || "Pas d’accroche"}
         </p>
+        {talent.physical &&
+          (() => {
+            const ph = talent.physical;
+            const bits = [
+              playingAgeLabel(ph.ageMin, ph.ageMax),
+              ph.heightCm ? `${ph.heightCm} cm` : "",
+              ph.build ? buildLabel(ph.build) : "",
+            ].filter(Boolean);
+            return bits.length > 0 ? (
+              <p className="mt-2 font-mono text-[11px] tracking-wide text-gold">
+                {bits.join(" · ")}
+              </p>
+            ) : null;
+          })()}
         <div className="mt-3 flex flex-wrap gap-1.5">
           {talent.roles.slice(0, 3).map((role) => (
             <span

@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Eye } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { AuthGate } from "@/components/auth-gate";
+import { PhysicalSection } from "@/components/physical-section";
 import { PortfolioManager } from "@/components/portfolio-manager";
 import { PresentationRecorder } from "@/components/presentation-recorder";
 import { TalentProfilePanel } from "@/components/talent-profile-panel";
@@ -21,6 +22,7 @@ import {
   profileCompleteness,
   type TalentProfile,
 } from "@/lib/talent-profile";
+import { toIntOrNull } from "@/lib/physical";
 import type { Talent } from "@/lib/types";
 
 function splitCsv(value: string) {
@@ -55,6 +57,16 @@ function ProfilForm() {
           phone: p?.phone || "",
           showreelUrl: p?.showreelUrl || "",
           availability: availabilityFromApi(p?.availability),
+          gender: p?.gender || "",
+          ageMin: p?.ageMin != null ? String(p.ageMin) : "",
+          ageMax: p?.ageMax != null ? String(p.ageMax) : "",
+          heightCm: p?.heightCm != null ? String(p.heightCm) : "",
+          build: p?.build || "",
+          hairColor: p?.hairColor || "",
+          eyeColor: p?.eyeColor || "",
+          appearance: p?.appearance || "",
+          distinctFeatures: p?.distinctFeatures || "",
+          physicalDescription: p?.physicalDescription || "",
         });
       } catch (e) {
         setError(e instanceof Error ? e.message : "Chargement impossible");
@@ -80,6 +92,18 @@ function ProfilForm() {
       photos: photos.map((p) => p.url),
       phone: profile.phone || undefined,
       email: email || undefined,
+      physical: {
+        gender: profile.gender,
+        ageMin: toIntOrNull(profile.ageMin),
+        ageMax: toIntOrNull(profile.ageMax),
+        heightCm: toIntOrNull(profile.heightCm),
+        build: profile.build,
+        hairColor: profile.hairColor,
+        eyeColor: profile.eyeColor,
+        appearance: profile.appearance,
+        distinctFeatures: profile.distinctFeatures,
+        physicalDescription: profile.physicalDescription,
+      },
     }),
     [profile, photos, email],
   );
@@ -104,6 +128,16 @@ function ProfilForm() {
         phone: profile.phone,
         showreelUrl: profile.showreelUrl,
         availability: availabilityToApi(profile.availability),
+        gender: profile.gender,
+        ageMin: toIntOrNull(profile.ageMin),
+        ageMax: toIntOrNull(profile.ageMax),
+        heightCm: toIntOrNull(profile.heightCm),
+        build: profile.build,
+        hairColor: profile.hairColor,
+        eyeColor: profile.eyeColor,
+        appearance: profile.appearance,
+        distinctFeatures: profile.distinctFeatures,
+        physicalDescription: profile.physicalDescription,
       });
       setSaved(true);
     } catch (e) {
@@ -269,6 +303,8 @@ function ProfilForm() {
               onSaved={(url) => void persistShowreel(url)}
               onCleared={() => void persistShowreel("")}
             />
+
+            <PhysicalSection value={profile} onChange={update} />
 
             <PortfolioManager onPhotosChange={setPhotos} />
 

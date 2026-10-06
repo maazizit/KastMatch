@@ -49,6 +49,16 @@ model TalentProfile {
   tagline      String       @default("")
   bio          String       @default("")
   phone                 String       @default("")
+  gender                String       @default("")
+  ageMin                Int?
+  ageMax                Int?
+  heightCm              Int?
+  build                 String       @default("")
+  hairColor             String       @default("")
+  eyeColor              String       @default("")
+  appearance            String       @default("")
+  distinctFeatures      String       @default("")
+  physicalDescription   String       @default("")
   showreelUrl           String       @default("")
   presentationVideoKey  String       @default("")
   photoUrl              String       @default("")
