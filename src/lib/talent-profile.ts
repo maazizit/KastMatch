@@ -1,3 +1,5 @@
+import { emptyPhysical, physicalFilled, type PhysicalProfile } from "./physical";
+
 export type TalentProfile = {
   name: string;
   city: string;
@@ -8,7 +10,7 @@ export type TalentProfile = {
   phone: string;
   showreelUrl: string;
   availability: "available" | "limited" | "booked";
-};
+} & PhysicalProfile;
 
 export const defaultProfile: TalentProfile = {
   name: "",
@@ -20,6 +22,7 @@ export const defaultProfile: TalentProfile = {
   phone: "",
   showreelUrl: "",
   availability: "available",
+  ...emptyPhysical,
 };
 
 const STORAGE_KEY = "kastmatch.talentProfile";
@@ -50,6 +53,8 @@ export function profileCompleteness(profile: TalentProfile): number {
     profile.phone,
     profile.showreelUrl,
   ];
-  const filled = fields.filter((f) => f.trim().length > 0).length;
-  return Math.round((filled / fields.length) * 100);
+  const physical = physicalFilled(profile);
+  const filled =
+    fields.filter((f) => f.trim().length > 0).length + physical.filled;
+  return Math.round((filled / (fields.length + physical.total)) * 100);
 }

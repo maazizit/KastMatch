@@ -10,6 +10,12 @@ import { SiteNav } from "@/components/site-nav";
 import { TalentCard } from "@/components/talent-card";
 import { TalentProfilePanel } from "@/components/talent-profile-panel";
 import { apiGetTalents, mapTalent } from "@/lib/api-client";
+import {
+  BUILD_OPTIONS,
+  EYE_OPTIONS,
+  GENDER_OPTIONS,
+  HAIR_OPTIONS,
+} from "@/lib/physical";
 import type { Talent } from "@/lib/types";
 
 function DirectorTalentsBrowser() {
@@ -25,6 +31,13 @@ function DirectorTalentsBrowser() {
     "all" | Talent["availability"]
   >("all");
   const [mediaOnly, setMediaOnly] = useState(false);
+  const [gender, setGender] = useState("");
+  const [build, setBuild] = useState("");
+  const [hair, setHair] = useState("");
+  const [eyes, setEyes] = useState("");
+  const [playAge, setPlayAge] = useState("");
+  const [heightMin, setHeightMin] = useState("");
+  const [heightMax, setHeightMax] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(
     searchParams.get("id"),
   );
@@ -84,6 +97,21 @@ function DirectorTalentsBrowser() {
         return false;
       if (mediaOnly && !t.showreelUrl && !(t.photos && t.photos.length > 0))
         return false;
+      const ph = t.physical;
+      if (gender && ph?.gender !== gender) return false;
+      if (build && ph?.build !== build) return false;
+      if (hair && ph?.hairColor !== hair) return false;
+      if (eyes && ph?.eyeColor !== eyes) return false;
+      const age = parseInt(playAge, 10);
+      if (Number.isFinite(age)) {
+        const lo = ph?.ageMin ?? ph?.ageMax;
+        const hi = ph?.ageMax ?? ph?.ageMin;
+        if (lo == null || hi == null || age < lo || age > hi) return false;
+      }
+      const hMin = parseInt(heightMin, 10);
+      const hMax = parseInt(heightMax, 10);
+      if (Number.isFinite(hMin) && (ph?.heightCm == null || ph.heightCm < hMin)) return false;
+      if (Number.isFinite(hMax) && (ph?.heightCm == null || ph.heightCm > hMax)) return false;
       if (!q) return true;
       const hay = [
         t.name,
@@ -92,12 +120,17 @@ function DirectorTalentsBrowser() {
         t.bio ?? "",
         ...t.roles,
         ...t.languages,
+        t.physical?.physicalDescription ?? "",
+        t.physical?.distinctFeatures ?? "",
+        t.physical?.appearance ?? "",
       ]
         .join(" ")
         .toLowerCase();
       return hay.includes(q);
     });
-  }, [talents, query, city, role, language, availability, mediaOnly]);
+  }, [talents, query, city, role, language, availability, mediaOnly, gender, build, hair, eyes, playAge, heightMin, heightMax]);
+
+  const physicalActive = Boolean(gender || build || hair || eyes || playAge || heightMin || heightMax);
 
   const selected =
     filtered.find((t) => t.id === selectedId) ??
@@ -205,6 +238,69 @@ function DirectorTalentsBrowser() {
             />
             Avec vidéo / photos
           </label>
+        </div>
+
+        <p className="mt-5 font-mono text-[10px] tracking-[0.3em] text-gold uppercase">
+          Physique du rôle
+          {physicalActive && (
+            <button
+              type="button"
+              onClick={() => {
+                setGender(""); setBuild(""); setHair(""); setEyes("");
+                setPlayAge(""); setHeightMin(""); setHeightMax("");
+              }}
+              className="ml-3 normal-case tracking-normal text-spot hover:underline"
+            >
+              Réinitialiser
+            </button>
+          )}
+        </p>
+        <div className="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {(
+            [
+              ["Tous les genres", gender, setGender, GENDER_OPTIONS],
+              ["Toute corpulence", build, setBuild, BUILD_OPTIONS],
+              ["Tous cheveux", hair, setHair, HAIR_OPTIONS],
+              ["Tous yeux", eyes, setEyes, EYE_OPTIONS],
+            ] as const
+          ).map(([placeholder, value, set, opts]) => (
+            <select
+              key={placeholder}
+              value={value}
+              onChange={(e) => set(e.target.value)}
+              className="rounded-xl border border-frame bg-lens px-3 py-2 text-sm text-mist"
+            >
+              <option value="">{placeholder}</option>
+              {opts.filter((o) => o.value).map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          ))}
+          <input
+            type="number"
+            min={5}
+            max={99}
+            value={playAge}
+            onChange={(e) => setPlayAge(e.target.value)}
+            placeholder="Âge à jouer (ex. 30)"
+            className="rounded-xl border border-frame bg-lens px-3 py-2 text-sm text-mist"
+          />
+          <input
+            type="number"
+            value={heightMin}
+            onChange={(e) => setHeightMin(e.target.value)}
+            placeholder="Taille min (cm)"
+            className="rounded-xl border border-frame bg-lens px-3 py-2 text-sm text-mist"
+          />
+          <input
+            type="number"
+            value={heightMax}
+            onChange={(e) => setHeightMax(e.target.value)}
+            placeholder="Taille max (cm)"
+            className="rounded-xl border border-frame bg-lens px-3 py-2 text-sm text-mist"
+          />
         </div>
       </div>
 

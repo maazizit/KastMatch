@@ -27,6 +27,16 @@ export type ApiTalent = {
     tagline: string;
     bio: string;
     phone?: string;
+    gender?: string;
+    ageMin?: number | null;
+    ageMax?: number | null;
+    heightCm?: number | null;
+    build?: string;
+    hairColor?: string;
+    eyeColor?: string;
+    appearance?: string;
+    distinctFeatures?: string;
+    physicalDescription?: string;
     showreelUrl: string;
     photoUrl: string;
     availability: "AVAILABLE" | "LIMITED" | "BOOKED";
@@ -43,6 +53,16 @@ export type ApiProfile = {
   tagline: string;
   bio: string;
   phone?: string;
+  gender?: string;
+  ageMin?: number | null;
+  ageMax?: number | null;
+  heightCm?: number | null;
+  build?: string;
+  hairColor?: string;
+  eyeColor?: string;
+  appearance?: string;
+  distinctFeatures?: string;
+  physicalDescription?: string;
   showreelUrl: string;
   photoUrl: string;
   availability: "AVAILABLE" | "LIMITED" | "BOOKED";
@@ -91,6 +111,20 @@ export function mapTalent(t: ApiTalent): Talent {
     photos: t.portfolioPhotos?.map((ph) => ph.url) ?? [],
     email: t.email || undefined,
     phone: p?.phone || undefined,
+    physical: p
+      ? {
+          gender: p.gender ?? "",
+          ageMin: p.ageMin ?? null,
+          ageMax: p.ageMax ?? null,
+          heightCm: p.heightCm ?? null,
+          build: p.build ?? "",
+          hairColor: p.hairColor ?? "",
+          eyeColor: p.eyeColor ?? "",
+          appearance: p.appearance ?? "",
+          distinctFeatures: p.distinctFeatures ?? "",
+          physicalDescription: p.physicalDescription ?? "",
+        }
+      : undefined,
   };
 }
 
@@ -205,6 +239,16 @@ export async function apiUpdateMyProfile(input: {
   tagline?: string;
   bio?: string;
   phone?: string;
+  gender?: string;
+  ageMin?: number | null;
+  ageMax?: number | null;
+  heightCm?: number | null;
+  build?: string;
+  hairColor?: string;
+  eyeColor?: string;
+  appearance?: string;
+  distinctFeatures?: string;
+  physicalDescription?: string;
   showreelUrl?: string;
   photoUrl?: string;
   availability?: ApiProfile["availability"];

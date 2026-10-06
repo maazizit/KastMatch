@@ -11,6 +11,18 @@ export type Talent = {
   photos?: string[];
   email?: string;
   phone?: string;
+  physical?: {
+    gender: string;
+    ageMin: number | null;
+    ageMax: number | null;
+    heightCm: number | null;
+    build: string;
+    hairColor: string;
+    eyeColor: string;
+    appearance: string;
+    distinctFeatures: string;
+    physicalDescription: string;
+  };
 };
 
 export type Casting = {
