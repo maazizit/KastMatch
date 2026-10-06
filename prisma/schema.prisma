@@ -37,6 +37,9 @@ model User {
   castings     Casting[]      @relation("DirectorCastings")
   applications Application[]  @relation("TalentApplications")
   portfolioPhotos PortfolioPhoto[]
+  directorConversations Conversation[] @relation("DirectorConversations")
+  talentConversations   Conversation[] @relation("TalentConversations")
+  sentMessages          Message[]
 }
 
 model TalentProfile {
@@ -112,4 +115,33 @@ model PortfolioPhoto {
   createdAt   DateTime @default(now())
 
   @@index([userId])
+}
+
+model Conversation {
+  id            String    @id @default(cuid())
+  directorId    String
+  director      User      @relation("DirectorConversations", fields: [directorId], references: [id], onDelete: Cascade)
+  talentId      String
+  talent        User      @relation("TalentConversations", fields: [talentId], references: [id], onDelete: Cascade)
+  castingHint   String    @default("")
+  lastMessageAt DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  messages      Message[]
+
+  @@unique([directorId, talentId])
+  @@index([talentId])
+  @@index([directorId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  body           String
+  readAt         DateTime?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt])
 }

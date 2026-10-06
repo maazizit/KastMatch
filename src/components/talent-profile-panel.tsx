@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Copy,
   Check,
   Mail,
   MessageCircle,
+  MessageSquare,
+  Loader2,
   Phone,
   X,
 } from "lucide-react";
+import { apiStartConversation } from "@/lib/api-client";
 import type { Talent } from "@/lib/types";
 import {
   buildLabel,
@@ -58,6 +62,26 @@ export function TalentProfilePanel({
 
   const [message, setMessage] = useState(baseMessage);
   const [copied, setCopied] = useState<"email" | "phone" | null>(null);
+  const router = useRouter();
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
+  const canMessage = talent.id !== "preview";
+
+  async function sendInApp() {
+    setSending(true);
+    setSendError(null);
+    try {
+      const id = await apiStartConversation({
+        talentId: talent.id,
+        body: message,
+        castingHint,
+      });
+      router.push(`/messages?c=${id}`);
+    } catch (e) {
+      setSendError(e instanceof Error ? e.message : "Envoi impossible");
+      setSending(false);
+    }
+  }
 
   useEffect(() => {
     setMessage(baseMessage);
@@ -286,7 +310,22 @@ export function TalentProfilePanel({
             />
           </label>
 
-          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+          {canMessage && (
+            <>
+              <button
+                type="button"
+                onClick={() => void sendInApp()}
+                disabled={sending || !message.trim()}
+                className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-spot px-4 py-3 text-sm font-semibold text-white transition hover:bg-[var(--spot-hover)] disabled:opacity-60"
+              >
+                {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <MessageSquare className="h-4 w-4" />}
+                Envoyer dans KastMatch
+              </button>
+              {sendError && <p className="mt-2 text-sm text-spot">{sendError}</p>}
+            </>
+          )}
+
+          <div className="mt-2 flex flex-col gap-2 sm:flex-row">
             {wa ? (
               <a
                 href={wa}
