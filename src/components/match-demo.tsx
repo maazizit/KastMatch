@@ -59,7 +59,7 @@ export function MatchDemo() {
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden rounded-2xl border border-white/10 bg-black shadow-[0_40px_120px_-30px_var(--spot)]"
+          className="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden rounded-2xl border border-frame bg-black shadow-[0_40px_120px_-30px_var(--spot)]"
         >
           <Portrait tone="red" seed={3} className="h-full w-full" />
           <div className="scan-line" />

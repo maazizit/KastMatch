@@ -5,6 +5,7 @@ export type TalentProfile = {
   languages: string;
   tagline: string;
   bio: string;
+  phone: string;
   showreelUrl: string;
   availability: "available" | "limited" | "booked";
 };
@@ -16,6 +17,7 @@ export const defaultProfile: TalentProfile = {
   languages: "AR, FR",
   tagline: "",
   bio: "",
+  phone: "",
   showreelUrl: "",
   availability: "available",
 };
@@ -45,6 +47,7 @@ export function profileCompleteness(profile: TalentProfile): number {
     profile.languages,
     profile.tagline,
     profile.bio,
+    profile.phone,
     profile.showreelUrl,
   ];
   const filled = fields.filter((f) => f.trim().length > 0).length;

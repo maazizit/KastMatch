@@ -19,12 +19,14 @@ export type ApiCasting = {
 export type ApiTalent = {
   id: string;
   name: string;
+  email?: string;
   talentProfile: {
     city: string;
     roles: string;
     languages: string;
     tagline: string;
     bio: string;
+    phone?: string;
     showreelUrl: string;
     photoUrl: string;
     availability: "AVAILABLE" | "LIMITED" | "BOOKED";
@@ -40,6 +42,7 @@ export type ApiProfile = {
   languages: string;
   tagline: string;
   bio: string;
+  phone?: string;
   showreelUrl: string;
   photoUrl: string;
   availability: "AVAILABLE" | "LIMITED" | "BOOKED";
@@ -86,6 +89,8 @@ export function mapTalent(t: ApiTalent): Talent {
     availability,
     showreelUrl: p?.showreelUrl || undefined,
     photos: t.portfolioPhotos?.map((ph) => ph.url) ?? [],
+    email: t.email || undefined,
+    phone: p?.phone || undefined,
   };
 }
 
@@ -199,6 +204,7 @@ export async function apiUpdateMyProfile(input: {
   languages?: string;
   tagline?: string;
   bio?: string;
+  phone?: string;
   showreelUrl?: string;
   photoUrl?: string;
   availability?: ApiProfile["availability"];

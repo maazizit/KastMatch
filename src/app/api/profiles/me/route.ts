@@ -11,6 +11,7 @@ const updateSchema = z.object({
   languages: z.string().optional(),
   tagline: z.string().optional(),
   bio: z.string().optional(),
+  phone: z.string().max(40).optional(),
   showreelUrl: z.string().optional(),
   photoUrl: z.string().optional(),
   availability: z.enum(["AVAILABLE", "LIMITED", "BOOKED"]).optional(),
@@ -51,6 +52,7 @@ export async function PUT(request: Request) {
               languages: body.languages ?? "",
               tagline: body.tagline ?? "",
               bio: body.bio ?? "",
+              phone: body.phone ?? "",
               showreelUrl: body.showreelUrl ?? "",
               photoUrl: body.photoUrl ?? "",
               availability: body.availability ?? "AVAILABLE",
@@ -61,6 +63,7 @@ export async function PUT(request: Request) {
               ...(body.languages !== undefined ? { languages: body.languages } : {}),
               ...(body.tagline !== undefined ? { tagline: body.tagline } : {}),
               ...(body.bio !== undefined ? { bio: body.bio } : {}),
+              ...(body.phone !== undefined ? { phone: body.phone } : {}),
               ...(body.showreelUrl !== undefined
                 ? { showreelUrl: body.showreelUrl }
                 : {}),

@@ -48,6 +48,7 @@ model TalentProfile {
   languages    String       @default("")
   tagline      String       @default("")
   bio          String       @default("")
+  phone                 String       @default("")
   showreelUrl           String       @default("")
   presentationVideoKey  String       @default("")
   photoUrl              String       @default("")

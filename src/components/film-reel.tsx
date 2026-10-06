@@ -64,7 +64,7 @@ function Frame({
       initial={{ opacity: 0, scale: 0.92 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.1, delay: 0.5 + i * 0.18, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute overflow-hidden rounded-sm border border-white/10 bg-black shadow-[0_30px_80px_-20px_#000]"
+      className="absolute overflow-hidden rounded-sm border border-frame bg-black shadow-[0_30px_80px_-20px_#000]"
     >
       {(["left-0", "right-0"] as const).map((side) => (
         <div key={side} className={`absolute inset-y-0 ${side} z-10 flex w-4 flex-col justify-between bg-black py-2`}>

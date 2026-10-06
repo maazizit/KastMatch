@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import { CursorRing } from "@/components/cursor-ring";
 import { FilmGrain } from "@/components/film-grain";
+import {
+  ThemeProvider,
+  themeInitScript,
+} from "@/components/theme-provider";
 import { absoluteUrl, siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -74,12 +78,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${display.variable} ${body.variable} ${mono.variable} h-full`}>
+    <html
+      lang="fr"
+      data-theme="dark"
+      className={`${display.variable} ${body.variable} ${mono.variable} h-full`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="min-h-full antialiased">
-        <FilmGrain />
-        <div className="vignette" aria-hidden />
-        <CursorRing />
-        {children}
+        <ThemeProvider>
+          <FilmGrain />
+          <div className="vignette" aria-hidden />
+          <CursorRing />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

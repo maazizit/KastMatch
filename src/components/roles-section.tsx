@@ -69,7 +69,7 @@ export function RolesSection() {
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.8 }}
                 style={{ flexGrow: on ? 1.7 : 1, flexBasis: 0 }}
-                className="group relative min-h-[420px] overflow-hidden rounded-3xl border border-white/10 bg-ink transition-[flex-grow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                className="group relative min-h-[420px] overflow-hidden rounded-3xl border border-frame bg-ink-elevated transition-[flex-grow] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
               >
                 <Portrait
                   tone={role.tone}

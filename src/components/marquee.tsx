@@ -4,7 +4,7 @@ const WORDS = ["Lead", "Voix", "Figuration", "Cascade", "Réalisation", "Image",
 export function Marquee() {
   const row = [...WORDS, ...WORDS];
   return (
-    <div className="relative overflow-hidden border-y border-white/10 bg-ink py-6" aria-hidden>
+    <div className="relative overflow-hidden border-y border-frame bg-ink-elevated py-6" aria-hidden>
       <div className="marquee-track">
         {[0, 1].map((k) => (
           <div key={k} className="flex shrink-0 items-center">

@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
-:root {
-  /* Nuit de projection — noir profond, ivoire, rouge cinéma, or pâle */
+/* Sombre (cinéma) — défaut */
+:root,
+[data-theme="dark"] {
   --ink: #050506;
   --ink-elevated: #131316;
   --spot: #e11d48;
@@ -15,6 +16,47 @@
   --frame: #26262b;
   --background: #0a0a0c;
   --foreground: var(--mist);
+  --stage-spot: #e11d4826;
+  --stage-gold: #e3c27d14;
+  --stage-top: #0d0d10;
+  --stage-mid: #0a0a0c;
+  --stage-bottom: #060607;
+  --vignette: #000000a0;
+  --beam: #f3ebdd;
+  --dust: #f3ebdd;
+  --placeholder: #6b6860;
+  --nav-border: rgba(255, 255, 255, 0.1);
+  --grain-opacity: 0.07;
+  --grain-blend: screen;
+}
+
+/* Clair (studio daylight) */
+[data-theme="light"] {
+  --ink: #12151c;
+  --ink-elevated: #ffffff;
+  --spot: #e11d48;
+  --spot-hover: #be123c;
+  --spot-soft: #e11d4826;
+  --flare: #0f766e;
+  --gold: #b45309;
+  --mist: #12151c;
+  --mist-dim: #5b6572;
+  --lens: #f4f6f8;
+  --frame: #d7dde6;
+  --background: #eef1f5;
+  --foreground: var(--mist);
+  --stage-spot: #e11d4818;
+  --stage-gold: #0f766e14;
+  --stage-top: #f7f8fb;
+  --stage-mid: #eef1f5;
+  --stage-bottom: #e8ecf2;
+  --vignette: #12151c18;
+  --beam: #e11d48;
+  --dust: #12151c;
+  --placeholder: #8b93a0;
+  --nav-border: rgba(18, 21, 28, 0.1);
+  --grain-opacity: 0.035;
+  --grain-blend: multiply;
 }
 
 @theme inline {
@@ -49,6 +91,7 @@ body {
   color: var(--mist);
   font-family: var(--font-body), system-ui, sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 ::selection {
@@ -62,19 +105,19 @@ body {
 
 .cinema-stage {
   background:
-    radial-gradient(ellipse 70% 50% at 85% 0%, #e11d4826, transparent 55%),
-    radial-gradient(ellipse 55% 40% at 0% 100%, #e3c27d14, transparent 50%),
-    linear-gradient(180deg, #0d0d10 0%, #0a0a0c 55%, #060607 100%);
+    radial-gradient(ellipse 70% 50% at 85% 0%, var(--stage-spot), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 0% 100%, var(--stage-gold), transparent 50%),
+    linear-gradient(180deg, var(--stage-top) 0%, var(--stage-mid) 55%, var(--stage-bottom) 100%);
 }
 
-/* Contrôles de formulaire sombres, partout */
+/* Contrôles de formulaire */
 input,
 select,
 textarea {
   background-color: var(--lens);
   color: var(--mist);
   border-color: var(--frame);
-  color-scheme: dark;
+  color-scheme: inherit;
 }
 input:focus,
 select:focus,
@@ -85,7 +128,7 @@ textarea:focus {
 }
 input::placeholder,
 textarea::placeholder {
-  color: #6b6860;
+  color: var(--placeholder);
 }
 
 .font-mono {
@@ -97,25 +140,23 @@ textarea::placeholder {
   color: transparent;
 }
 
-/* Vignette fixe façon objectif */
 .vignette {
   pointer-events: none;
   position: fixed;
   inset: 0;
   z-index: 49;
-  background: radial-gradient(ellipse at center, transparent 55%, #000000a0 120%);
+  background: radial-gradient(ellipse at center, transparent 55%, var(--vignette) 120%);
 }
 
-/* Faisceau de projecteur */
 .beam {
   background: conic-gradient(
     from 180deg at 50% 0%,
     transparent 0deg,
-    #f3ebdd00 160deg,
-    #f3ebdd22 176deg,
-    #f3ebdd33 180deg,
-    #f3ebdd22 184deg,
-    #f3ebdd00 200deg,
+    color-mix(in srgb, var(--beam) 0%, transparent) 160deg,
+    color-mix(in srgb, var(--beam) 13%, transparent) 176deg,
+    color-mix(in srgb, var(--beam) 20%, transparent) 180deg,
+    color-mix(in srgb, var(--beam) 13%, transparent) 184deg,
+    color-mix(in srgb, var(--beam) 0%, transparent) 200deg,
     transparent 360deg
   );
   filter: blur(18px);
@@ -127,11 +168,10 @@ textarea::placeholder {
   50% { transform: rotate(4deg); opacity: 1; }
 }
 
-/* Poussière dans le faisceau */
 .dust {
   position: absolute;
   border-radius: 9999px;
-  background: #f3ebdd;
+  background: var(--dust);
   opacity: 0;
   animation: dust-float linear infinite;
 }
@@ -142,7 +182,6 @@ textarea::placeholder {
   100% { transform: translate(var(--dx, 20px), var(--dy, -120px)); opacity: 0; }
 }
 
-/* Bandeau défilant */
 .marquee-track {
   display: flex;
   width: max-content;
@@ -153,7 +192,6 @@ textarea::placeholder {
   to { transform: translateX(-50%); }
 }
 
-/* Ligne de scan */
 @keyframes scan {
   0% { top: 0%; }
   50% { top: 100%; }
@@ -169,7 +207,6 @@ textarea::placeholder {
   animation: scan 3.6s ease-in-out infinite;
 }
 
-/* Titre à dégradé ivoire → rouge */
 .text-gradient-spot {
   background: linear-gradient(100deg, #ff6b88 0%, var(--spot) 50%, #9f1239 100%);
   -webkit-background-clip: text;
@@ -177,7 +214,6 @@ textarea::placeholder {
   color: transparent;
 }
 
-/* Curseur viseur */
 .cursor-ring {
   pointer-events: none;
   position: fixed;
@@ -196,7 +232,7 @@ textarea::placeholder {
   width: 72px;
   height: 72px;
   margin: -36px 0 0 -36px;
-  background: #ffffff22;
+  background: color-mix(in srgb, var(--mist) 13%, transparent);
 }
 
 .film-grain {
@@ -204,8 +240,8 @@ textarea::placeholder {
   position: fixed;
   inset: 0;
   z-index: 50;
-  opacity: 0.07;
-  mix-blend-mode: screen;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: var(--grain-blend);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   animation: grain-shift 0.9s steps(2) infinite;
 }
@@ -310,7 +346,6 @@ textarea::placeholder {
     display: none;
   }
 }
-
 
 @media (hover: none) {
   .cursor-ring {

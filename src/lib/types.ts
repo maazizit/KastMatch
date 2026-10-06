@@ -9,6 +9,8 @@ export type Talent = {
   availability: "available" | "limited" | "booked";
   showreelUrl?: string;
   photos?: string[];
+  email?: string;
+  phone?: string;
 };
 
 export type Casting = {

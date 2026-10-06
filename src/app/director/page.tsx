@@ -41,6 +41,8 @@ function talentFromApplication(app: ApplicationRow): Talent | null {
     availability: availabilityFromApi(p?.availability ?? undefined),
     showreelUrl: p?.showreelUrl || undefined,
     photos: app.talent.portfolioPhotos?.map((ph) => ph.url) ?? [],
+    email: app.talent.email,
+    phone: p?.phone || undefined,
   };
 }
 
@@ -346,6 +348,7 @@ function DirectorWorkspace() {
             {selectedTalent && selectedApp ? (
               <TalentProfilePanel
                 talent={selectedTalent}
+                castingHint={selectedApp.casting.title}
                 onClose={() => setSelectedAppId(null)}
                 footer={
                   <div className="flex flex-col gap-2">

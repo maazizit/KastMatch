@@ -8,7 +8,7 @@ import { SiteNav } from "@/components/site-nav";
 import { AuthGate } from "@/components/auth-gate";
 import { PortfolioManager } from "@/components/portfolio-manager";
 import { PresentationRecorder } from "@/components/presentation-recorder";
-import { TalentCard } from "@/components/talent-card";
+import { TalentProfilePanel } from "@/components/talent-profile-panel";
 import {
   apiGetMyProfile,
   apiUpdateMyProfile,
@@ -33,6 +33,7 @@ function splitCsv(value: string) {
 function ProfilForm() {
   const [profile, setProfile] = useState<TalentProfile>(defaultProfile);
   const [photos, setPhotos] = useState<PortfolioPhoto[]>([]);
+  const [email, setEmail] = useState("");
   const [saved, setSaved] = useState(false);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +44,7 @@ function ProfilForm() {
       try {
         const { user } = await apiGetMyProfile();
         const p = user.talentProfile;
+        setEmail(user.email || "");
         setProfile({
           name: user.name || "",
           city: p?.city || "",
@@ -50,6 +52,7 @@ function ProfilForm() {
           languages: p?.languages || "",
           tagline: p?.tagline || "",
           bio: p?.bio || "",
+          phone: p?.phone || "",
           showreelUrl: p?.showreelUrl || "",
           availability: availabilityFromApi(p?.availability),
         });
@@ -75,8 +78,10 @@ function ProfilForm() {
       availability: profile.availability,
       showreelUrl: profile.showreelUrl || undefined,
       photos: photos.map((p) => p.url),
+      phone: profile.phone || undefined,
+      email: email || undefined,
     }),
-    [profile, photos],
+    [profile, photos, email],
   );
 
   function update<K extends keyof TalentProfile>(key: K, value: TalentProfile[K]) {
@@ -96,6 +101,7 @@ function ProfilForm() {
         languages: profile.languages,
         tagline: profile.tagline,
         bio: profile.bio,
+        phone: profile.phone,
         showreelUrl: profile.showreelUrl,
         availability: availabilityToApi(profile.availability),
       });
@@ -183,23 +189,34 @@ function ProfilForm() {
                 />
               </label>
               <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
-                Disponibilité
-                <select
-                  value={profile.availability}
-                  onChange={(e) =>
-                    update(
-                      "availability",
-                      e.target.value as TalentProfile["availability"],
-                    )
-                  }
+                Téléphone (WhatsApp)
+                <input
+                  type="tel"
+                  value={profile.phone}
+                  onChange={(e) => update("phone", e.target.value)}
                   className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
-                >
-                  <option value="available">Disponible</option>
-                  <option value="limited">Limité</option>
-                  <option value="booked">Booké</option>
-                </select>
+                  placeholder="06 12 34 56 78"
+                />
               </label>
             </div>
+
+            <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
+              Disponibilité
+              <select
+                value={profile.availability}
+                onChange={(e) =>
+                  update(
+                    "availability",
+                    e.target.value as TalentProfile["availability"],
+                  )
+                }
+                className="rounded-xl border border-frame bg-lens px-3 py-2.5 text-sm normal-case tracking-normal text-mist outline-none focus:border-spot/70"
+              >
+                <option value="available">Disponible</option>
+                <option value="limited">Limité</option>
+                <option value="booked">Booké</option>
+              </select>
+            </label>
 
             <label className="grid gap-1.5 text-xs tracking-[0.2em] text-mist-dim uppercase">
               Rôles (séparés par virgule)
@@ -306,7 +323,7 @@ function ProfilForm() {
               </div>
             </div>
             <div className="rounded-2xl border border-dashed border-mist/20 bg-ink/40 p-3">
-              <TalentCard talent={recruiterView} />
+              <TalentProfilePanel talent={recruiterView} />
             </div>
             {!profile.showreelUrl && photos.length === 0 && (
               <p className="mt-3 text-xs leading-relaxed text-mist-dim">

@@ -32,7 +32,7 @@ export function TalentReel() {
           {TALENTS.map((t, i) => (
             <figure
               key={t.name}
-              className="group relative w-[62vw] shrink-0 overflow-hidden rounded-xl border border-white/10 bg-black transition duration-500 hover:-translate-y-2 hover:border-spot/50 md:w-[24vw]"
+              className="group relative w-[62vw] shrink-0 overflow-hidden rounded-xl border border-frame bg-black transition duration-500 hover:-translate-y-2 hover:border-spot/50 md:w-[24vw]"
               style={{ rotate: `${(i % 2 ? 1 : -1) * 0.8}deg` }}
             >
               <Portrait tone={t.tone} seed={i} className="aspect-[3/4] w-full transition duration-700 group-hover:scale-105" />

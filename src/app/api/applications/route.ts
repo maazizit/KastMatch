@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { requireSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { PORTFOLIO_LIMITS } from "@/lib/storage/limits";
 import { toErrorResponse } from "@/lib/api-error";
 
 const applySchema = z.object({
@@ -42,7 +43,7 @@ export async function GET() {
             talentProfile: true,
             portfolioPhotos: {
               orderBy: { position: "asc" },
-              take: 5,
+              take: PORTFOLIO_LIMITS.maxPhotos,
               select: { id: true, url: true },
             },
           },

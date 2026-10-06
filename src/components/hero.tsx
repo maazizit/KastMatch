@@ -8,6 +8,7 @@ import { AiBadge } from "./ai-badge";
 import { Dust } from "./dust";
 import { FilmReel } from "./film-reel";
 import { Magnetic } from "./magnetic";
+import { ThemeToggle } from "./theme-toggle";
 import { Timecode } from "./timecode";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -42,7 +43,7 @@ export function Hero() {
 
       {/* repères de cadrage */}
       {["top-5 left-5 border-t border-l", "top-5 right-5 border-t border-r", "bottom-5 left-5 border-b border-l", "bottom-5 right-5 border-b border-r"].map((c) => (
-        <span key={c} className={`pointer-events-none absolute z-10 h-6 w-6 border-white/30 ${c}`} aria-hidden />
+        <span key={c} className={`pointer-events-none absolute z-10 h-6 w-6 border-frame ${c}`} aria-hidden />
       ))}
 
       <FilmReel />
@@ -63,11 +64,13 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.6 }}
+          className="flex items-center gap-2"
         >
+          <ThemeToggle />
           <AccountNav
             className="font-mono text-[11px] tracking-[0.2em] uppercase"
             linkClassName="rounded-full px-3 py-2 text-mist-dim transition hover:text-mist"
-            ctaClassName="rounded-full border border-mist/30 px-4 py-2 text-mist transition hover:border-spot hover:bg-spot"
+            ctaClassName="rounded-full border border-mist/30 px-4 py-2 text-mist transition hover:border-spot hover:bg-spot hover:text-white"
           />
         </motion.div>
       </header>

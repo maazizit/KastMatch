@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { AiBadge } from "./ai-badge";
+import { ThemeToggle } from "./theme-toggle";
 import { fetchMe, logoutRequest, type AuthUser } from "@/lib/auth-client";
 
 const publicLinks = [{ href: "/", label: "Accueil" }] as const;
@@ -55,7 +56,7 @@ export function SiteNav() {
   }
 
   return (
-    <header className="relative z-20 flex items-center justify-between gap-3 border-b border-white/10 bg-ink/70 px-6 py-5 backdrop-blur-xl md:px-12">
+    <header className="relative z-20 flex items-center justify-between gap-3 border-b border-[color:var(--nav-border)] bg-ink/70 px-6 py-5 backdrop-blur-xl md:px-12">
       <div className="flex items-center gap-3">
         <Link
           href="/"
@@ -86,6 +87,7 @@ export function SiteNav() {
             </Link>
           );
         })}
+        <ThemeToggle />
         {user ? (
           <button
             type="button"
