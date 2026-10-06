@@ -45,6 +45,7 @@ export function SiteNav() {
           ...publicLinks,
           { href: "/director/talents", label: "Talents" },
           { href: "/director", label: "Castings" },
+          { href: "/director/assistant", label: "Assistant IA" },
           { href: "/director/dashboard", label: "Dashboard IA" },
           { href: "/messages", label: "Messages" },
         ]
