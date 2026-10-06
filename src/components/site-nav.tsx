@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { AiBadge } from "./ai-badge";
 import { ThemeToggle } from "./theme-toggle";
+import { apiGetUnreadCount } from "@/lib/api-client";
 import { fetchMe, logoutRequest, type AuthUser } from "@/lib/auth-client";
 
 const publicLinks = [{ href: "/", label: "Accueil" }] as const;
@@ -18,6 +19,17 @@ export function SiteNav() {
   useEffect(() => {
     void fetchMe().then(setUser);
   }, [pathname]);
+
+  const [unread, setUnread] = useState(0);
+  useEffect(() => {
+    if (!user) return;
+    const load = () => void apiGetUnreadCount().then(setUnread).catch(() => {});
+    load();
+    const t = setInterval(() => {
+      if (!document.hidden) load();
+    }, 15000);
+    return () => clearInterval(t);
+  }, [user, pathname]);
 
   useEffect(() => {
     function onPageShow(e: PageTransitionEvent) {
@@ -34,6 +46,7 @@ export function SiteNav() {
           { href: "/director/talents", label: "Talents" },
           { href: "/director", label: "Castings" },
           { href: "/director/dashboard", label: "Dashboard IA" },
+          { href: "/messages", label: "Messages" },
         ]
       : user?.role === "TALENT"
         ? [
@@ -41,6 +54,7 @@ export function SiteNav() {
             { href: "/talent", label: "Castings" },
             { href: "/talent/agents", label: "Agents" },
             { href: "/talent/profil", label: "Mon profil" },
+            { href: "/messages", label: "Messages" },
           ]
         : [
             ...publicLinks,
@@ -84,6 +98,11 @@ export function SiteNav() {
               )}
             >
               {link.label}
+              {link.href === "/messages" && user && unread > 0 && (
+                <span className="ml-1.5 inline-grid h-4 min-w-4 place-items-center rounded-full bg-spot px-1 text-[9px] font-bold tracking-normal text-white">
+                  {unread > 9 ? "9+" : unread}
+                </span>
+              )}
             </Link>
           );
         })}

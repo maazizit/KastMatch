@@ -279,3 +279,66 @@ export async function apiDeletePortfolioPhoto(id: string) {
   const res = await fetch(`/api/portfolio/${id}`, { method: "DELETE" });
   return parseJson(res);
 }
+
+export type ConversationSummary = {
+  id: string;
+  other: { id: string; name: string };
+  castingHint: string;
+  lastMessage: { body: string; fromMe: boolean; createdAt: string } | null;
+  unread: number;
+  lastMessageAt: string;
+};
+
+export type ChatMessage = {
+  id: string;
+  senderId: string;
+  body: string;
+  createdAt: string;
+  readAt: string | null;
+};
+
+export async function apiGetConversations(): Promise<ConversationSummary[]> {
+  const res = await fetch("/api/conversations", { cache: "no-store" });
+  const data = await parseJson(res);
+  return data.conversations as ConversationSummary[];
+}
+
+export async function apiGetConversation(id: string) {
+  const res = await fetch(`/api/conversations/${id}`, { cache: "no-store" });
+  const data = await parseJson(res);
+  return data as {
+    conversation: { id: string; castingHint: string; other: { id: string; name: string } };
+    me: string;
+    messages: ChatMessage[];
+  };
+}
+
+export async function apiStartConversation(input: {
+  talentId: string;
+  body: string;
+  castingHint?: string;
+}): Promise<string> {
+  const res = await fetch("/api/conversations", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  const data = await parseJson(res);
+  return data.conversationId as string;
+}
+
+export async function apiSendMessage(conversationId: string, body: string): Promise<ChatMessage> {
+  const res = await fetch(`/api/conversations/${conversationId}/messages`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ body }),
+  });
+  const data = await parseJson(res);
+  return data.message as ChatMessage;
+}
+
+export async function apiGetUnreadCount(): Promise<number> {
+  const res = await fetch("/api/messages/unread", { cache: "no-store" });
+  const data = await parseJson(res);
+  return data.count as number;
+}
